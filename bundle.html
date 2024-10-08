@@ -1,0 +1,162 @@
+ {{ product | json }};
+
+ to echo product 
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ first make the product template (product.bundleproduct.liquid) https://prnt.sc/V2v0NnUsiSlo 
+ like bundle and then make a section place 
+ section/bundle-product.liquid
+ <div class="product-page">
+    <!-- Product Images -->
+    <div class="product-images">
+      {% if product.images.size > 1 %} 
+        <div class="product-gallery">
+          {% for image in product.images %}
+            <img src="{{ image | img_url: 'large' }}" alt="{{ image.alt | escape }}">
+          {% endfor %}
+        </div>
+      {% else %}
+        <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}">
+      {% endif %}
+    </div>
+    <!-- Product Information -->
+    <div class="product-info">
+      <!-- Product Title -->
+      <h1>{{ product.title }}</h1>
+       <h6 id="product-id">{{ product.id }}</h6>
+  
+      <!-- Product Price -->
+      {% if product.compare_at_price > product.price %}
+        <span class="price-sale">{{ product.price | money }}</span>
+        <span class="price-compare">{{ product.compare_at_price | money }}</span>
+      {% else %}
+        <span class="price">{{ product.price | money }}</span>
+      {% endif %}
+  
+      <!-- Product Description -->
+      <div class="product-description">
+        {{ product.description }}
+      </div>
+  
+      <!-- Add to Cart Form -->
+      <form action="/cart/add" method="post" enctype="multipart/form-data">
+        {% form 'product', product %}
+        <!-- Display Product Variants (e.g., Size, Color) -->
+        
+          <!-- Variant selection -->
+            {% if product.variants.size > 1 %}
+              <select name="id" id="variant-id" >
+                {% for variant in product.variants %}
+                  <option value="{{ variant.id }}">{{ variant.title }}</option>
+                {% endfor %}
+              </select>
+            {% else %}
+              <input type="hidden" name="id" id="variant-id" value="{{ product.variants.first.id }}">
+            {% endif %}
+  
+        <!-- Quantity Selector -->
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" name="quantity" value="1" min="1">
+  <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+        <!-- Add to Cart Button -->
+      <button type="button" class="addtocart"> Custom ADD TO CART</button>
+        {% endform %}
+      </form>
+    </div>
+  </div>
+   <script>
+    $(document).ready(function(){
+         $(".addtocart").click(function(){
+             let product_id = $('#product-id').text();
+            let variantId = $('#variant-id').val();
+              // Use the variant ID from the select or hidden input
+               let quantity = $('#quantity').val();
+               // let variantId = $('input[name="id"]').val();
+           alert(variantId);
+            // Prepare the form data to be sent in the AJAX request
+                let formData = {
+                    'items': [{
+                        'id': variantId,
+                        'quantity': 1,
+                           properties: {
+                              'BRAND': 'tanyasoni'
+                            }
+                    }]
+                };
+        
+             // Send the AJAX request to add the product to the cart
+                $.ajax({
+                    url: window.Shopify.routes.root + 'cart/add.js',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        console.log('Response:', response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+         });
+    });
+         
+      </script>
+  
+  {% schema %}
+    {
+      "name": "Section name",
+      "settings": []
+    }
+  {% endschema %}
+  note: variant id is used to get the add to cart work
+
+  after this make a section for the other bundle products to be added with the cycle
+  name section/bundle-products
+
+  {% for product in collections.all.products %}
+  {% if product.id == 8072531607752 %}
+     {% assign chain = product %}
+      <!-- {{ chain | json }} -->
+       <!-- Product Images -->
+      <div class="product-images">
+        {% if chain.images.size > 1 %} 
+          <div class="product-gallery">
+            {% for image in product.images %}
+              <img src="{{ image | img_url: 'large' }}" alt="{{ image.alt | escape }}">
+            {% endfor %}
+          </div>
+        {% else %}
+          <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}">
+        {% endif %}
+      </div>
+  {% endif %}
+
+   {% if product.id == 8072530559176 %}
+      {% assign chain = product %}
+      <!-- {{ chain | json }} -->
+       <!-- Product Images -->
+      <div class="product-images">
+        {% if chain.images.size > 1 %} 
+          <div class="product-gallery">
+            {% for image in product.images %}
+              <img src="{{ image | img_url: 'large' }}" alt="{{ image.alt | escape }}">
+            {% endfor %}
+          </div>
+        {% else %}
+          <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}">
+        {% endif %}
+      </div>
+  {% endif %}
+
+{% endfor %}
+
+
+{% schema %}
+  {
+    "name": "Section name",
+    "settings": []
+  }
+{% endschema %}
+
+and product.bundleproduct.liquid
+{% section 'bundle-product' %}
+{% section 'bundle-products' %}
