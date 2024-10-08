@@ -1,0 +1,151 @@
+changes
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+{% if discount_metafield == true and template contains 'product' %}
+         <del>
+            {%- if show_currency_code -%}
+              {{ price | money_with_currency }}
+            {%- else -%}
+              {{ price | money }}
+            {%- endif -%}
+          </del>
+          {%- assign discount_percentage = settings.dis_percent | default: 0 | times: 1 %}
+          {% assign discount_amount = price | times: discount_percentage | divided_by: 100 %}
+          {% assign new_price = price | minus: discount_amount %}
+         {%- if show_currency_code -%}
+              {%- assign discount_percentage = settings.dis_percent | default: 0 | times: 1 %}
+              {% assign discount_amount = price | times: discount_percentage | divided_by: 100 %}
+              {% assign new_price = price | minus: discount_amount %}
+              <span style="color: {{ settings.discount_color }}"> {{ new_price | money_with_currency }}</span>
+          {%- else -%}
+                {{ new_price | money }}
+          {%- endif -%}
+     {% elsif collection.metafields.custom.discount_enable.value == true and template contains 'collection'  %}
+            <del>
+            {%- if show_currency_code -%}
+              {{ price | money_with_currency }}
+            {%- else -%}
+              {{ price | money }}
+            {%- endif -%}
+          </del>
+          {%- assign discount_percentage = settings.dis_percent | default: 0 | times: 1 %}
+          {% assign discount_amount = price | times: discount_percentage | divided_by: 100 %}
+          {% assign new_price = price | minus: discount_amount %}
+         {%- if show_currency_code -%}
+              {%- assign discount_percentage = settings.dis_percent | default: 0 | times: 1 %}
+              {% assign discount_amount = price | times: discount_percentage | divided_by: 100 %}
+              {% assign new_price = price | minus: discount_amount %}
+              <span style="color: {{ settings.discount_color }}"> {{ new_price | money_with_currency }}</span>
+          {%- else -%}
+                {{ new_price | money }}
+          {%- endif -%}
+      {% elsif discount_price == true and template contains 'index' %}
+          <del>
+            {%- if show_currency_code -%}
+              {{ price | money_with_currency }}
+            {%- else -%}
+              {{ price | money }}
+            {%- endif -%}
+          </del>
+          {%- assign discount_percentage = settings.dis_percent | default: 0 | times: 1 %}
+          {% assign discount_amount = price | times: discount_percentage | divided_by: 100 %}
+          {% assign new_price = price | minus: discount_amount %}
+         {%- if show_currency_code -%}
+              {%- assign discount_percentage = settings.dis_percent | default: 0 | times: 1 %}
+              {% assign discount_amount = price | times: discount_percentage | divided_by: 100 %}
+              {% assign new_price = price | minus: discount_amount %}
+              <span style="color: {{ settings.discount_color }}"> {{ new_price | money_with_currency }}</span>
+          {%- else -%}
+                {{ new_price | money }}
+          {%- endif -%}
+      {% else %}
+      {%- if show_currency_code -%}
+        {{ price | money_with_currency }}
+      {%- else -%}
+        {{ price | money }}
+      {%- endif -%}
+      {% endif %}
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#add image 
+<img src="{{ product.featured_image | img_url: 'master' }}" alt="{{ product.title }}">
+#add style 
+{{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+$(document).ready(function() {
+    // Target the hidden input field with the class 'product-variant-id' and clear its value
+   //
+   //   // if (!hasRun) {
+   //    // Remove the 'selected' attribute from any currently selected option
+   //    $('option:selected').prop('selected', false);
+   //    // Set the first option as selected
+   //    $('option').first().prop('selected', true);
+   //    // hasRun = true; // Set the flag to true so it won't run again
+   // // }
+     // Remove the 'selected' attribute from any currently selected option
+   // Extract query string from the URL
+      let queryString = window.location.search;
+      // Create a URLSearchParams object from the query string
+      let urlParams = new URLSearchParams(queryString);
+      // Get the value of a specific parameter
+      let paramValue = urlParams.get('variant');
+      // Use jQuery to display or use the parameter value
+      if(paramValue == '' || paramValue == null){
+                 $('input.product-variant-id').val('');
+              $('option:selected').prop('selected', false);
+               $('option').first().prop('selected', true);
+      }
+});
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+{% if settings.dis_enable %}
+            <del>
+              {%- if show_currency_code -%}
+                {{ price | money_with_currency }}
+              {%- else -%}
+                {{ price | money }}
+              {%- endif -%}
+            </del>
+            {%- if show_currency_code -%}
+              {%- assign discount_percentage = settings.dis_percent | default: 0 | times: 1 %}
+              {% assign discount_amount = price | times: discount_percentage | divided_by: 100 %}
+              {% assign new_price = price | minus: discount_amount %}
+              {{ new_price | money_with_currency }}
+            {%- else -%}
+              {{ new_price | money }}
+            {%- endif -%}
+         {%- else -%}
+            {%- if show_currency_code -%}
+              {{ price | money_with_currency }}
+            {%- else -%}
+              {{ price | money }}
+            {%- endif -%}
+        {%- endif -%}
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+$(document).ready(function() {
+  // Target the hidden input field with the class 'product-variant-id' and clear its value
+ //
+ //   // if (!hasRun) {
+ //    // Remove the 'selected' attribute from any currently selected option
+ //    $('option:selected').prop('selected', false);
+ //    // Set the first option as selected
+ //    $('option').first().prop('selected', true);
+ //    // hasRun = true; // Set the flag to true so it won't run again
+ // // }
+   // Remove the 'selected' attribute from any currently selected option
+ // Extract query string from the URL
+
+    let queryString = window.location.search;
+    let urlParams = new URLSearchParams(queryString);
+    let paramValue = urlParams.get('variant');
+    if(paramValue == '' || paramValue == null){
+               $('input.product-variant-id').val('');
+            $('option:selected').prop('selected', false);
+             $('option').first().prop('selected', true);
+    }
+});

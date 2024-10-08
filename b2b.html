@@ -1,0 +1,46 @@
+  <input type="checkbox" class="yes" id="b2b" name="vehicle1" value="b2b">
+    <label for="b2b"> B2b</label><br>
+      <!-- Hidden field to carry B2B tags -->
+    <input type="hidden" name="customer[tags]" class="getB2B" value="B2B">
+    <div class="field">
+      <input
+
+  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  main register .liquid
+  <script>
+    $( document ).ready(function() {
+
+       // Check the initial state of the checkbox when the page loads
+        if ($('#b2b').is(':checked')) {
+            $('.getB2B').val('B2B');
+        } else {
+            $('.getB2B').val('');
+        }
+
+      $('#b2b').on('change', function() {
+          if ($(this).is(':checked')) {
+              $('.getB2B').val('B2B'); // Set the hidden field value to 'B2B' if checked
+          } else {
+              $('.getB2B').val(''); // Clear the hidden field value if unchecked
+          }
+      });
+    });
+
+</script>
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+create a segment inside customer
+create a discount
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+main-cart.liquid
+</div>
+{% if customer and customer.tags contains 'B2B' %}
+     <form action="{{ routes.cart_url }}?discount=SAVE10" class="cart__contents critical-hidden" method="post" id="cart">
+ {% else %}
+   <form action="{{ routes.cart_url }}" class="cart__contents critical-hidden" method="post" id="cart">
+{% endif %}
+
+all these form are auto built and run as default so we can customize the routes and can by own will remoce and replace value by the help of jquery 
+
